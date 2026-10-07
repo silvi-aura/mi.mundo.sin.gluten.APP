@@ -6,6 +6,7 @@
 <title>Mi Mundo Sin Gluten</title>
 <meta name="description" content="Tu guía para vivir con celiaquía: qué podés comer, menús, recetas y respuestas a tus dudas.">
 <meta name="theme-color" content="#EDF2E8">
+<script>try{var _t=JSON.parse(localStorage.getItem("vsg_tema"));document.documentElement.setAttribute("data-tema",_t||"auto")}catch(e){document.documentElement.setAttribute("data-tema","auto")}</script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -19,11 +20,40 @@
 <style>
 :root{
   --fondo:#EDF2E8; --sup:#FFFFFF; --tinta:#1D3428; --suave:#56695E; --linea:#D5DFD0;
-  --verde:#2D6A4C; --verde-osc:#214F38; --hoja:#E1ECDD;
-  --maiz:#EFB22F; --maiz-claro:#FFF4D6;
+  --verde:#2D6A4C; --verde-osc:#214F38; --verde-txt:#2D6A4C; --hoja:#E1ECDD;
+  --maiz:#EFB22F; --maiz-claro:#FFF4D6; --sobre-maiz:#1D3428;
   --si:#2E8B57; --ojo:#D69A00; --no:#C2453A;
+  --blanco:#FFFFFF; --oscuro:#1D3428; --velo:rgba(29,52,40,.5);
+  --alerta-bg:#FBE7E4; --ambar:#9A6B00; --ambar-t:#8A6200;
+  --eti-si-bg:#DDF0E4; --eti-si-t:#1F6B44; --eti-ojo-bg:#FFF1CC; --eti-ojo-t:#7A5500; --eti-no-bg:#FBE7E4; --eti-no-t:#A33328;
+  --mark-r:#F7C9C3; --mark-a:#FBE3A0; --mark-v:#CDE8D5;
   --seg-top:env(safe-area-inset-top,0px); --seg-bot:env(safe-area-inset-bottom,0px);
   color-scheme:light;
+}
+/* ---------- Modo noche ---------- */
+html[data-tema="noche"]{
+  --fondo:#0F1713; --sup:#18231D; --tinta:#E6EFE9; --suave:#9DB0A5; --linea:#2A3A31;
+  --verde:#2F7D58; --verde-osc:#A6D9BE; --verde-txt:#6FCB9A; --hoja:#213229;
+  --maiz:#EFB22F; --maiz-claro:#2E2813;
+  --si:#4CC28A; --ojo:#E0A800; --no:#E2685C;
+  --blanco:#1E2B24; --oscuro:#2B4538; --velo:rgba(0,0,0,.65);
+  --alerta-bg:#3A1F1C; --ambar:#E0B04A; --ambar-t:#E8C26A;
+  --eti-si-bg:#1E3A2B; --eti-si-t:#7FDDA8; --eti-ojo-bg:#3B3115; --eti-ojo-t:#F0CA6A; --eti-no-bg:#3D2320; --eti-no-t:#F1A59D;
+  --mark-r:#6B2D28; --mark-a:#6B5A1F; --mark-v:#2A5A3E;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){
+  html[data-tema="auto"]{
+    --fondo:#0F1713; --sup:#18231D; --tinta:#E6EFE9; --suave:#9DB0A5; --linea:#2A3A31;
+    --verde:#2F7D58; --verde-osc:#A6D9BE; --verde-txt:#6FCB9A; --hoja:#213229;
+    --maiz:#EFB22F; --maiz-claro:#2E2813;
+    --si:#4CC28A; --ojo:#E0A800; --no:#E2685C;
+    --blanco:#1E2B24; --oscuro:#2B4538; --velo:rgba(0,0,0,.65);
+    --alerta-bg:#3A1F1C; --ambar:#E0B04A; --ambar-t:#E8C26A;
+    --eti-si-bg:#1E3A2B; --eti-si-t:#7FDDA8; --eti-ojo-bg:#3B3115; --eti-ojo-t:#F0CA6A; --eti-no-bg:#3D2320; --eti-no-t:#F1A59D;
+    --mark-r:#6B2D28; --mark-a:#6B5A1F; --mark-v:#2A5A3E;
+    color-scheme:dark;
+  }
 }
 html{font-size:17px;-webkit-text-size-adjust:100%}
 html[data-letra="1"]{font-size:19px}
@@ -42,7 +72,8 @@ svg{width:1.3em;height:1.3em;flex:none}
 .top{position:sticky;top:0;z-index:20;background:var(--fondo);padding:calc(var(--seg-top) + .6rem) 1.1rem .5rem;display:flex;align-items:center;justify-content:space-between;max-width:560px;margin:0 auto}
 .marca{display:flex;align-items:center;gap:.55rem;font-family:'Lora',Georgia,serif;font-weight:600;font-size:1.05rem;color:var(--verde-osc)}
 .marca img{width:32px;height:32px;border-radius:9px}
-.campana{position:relative;width:46px;height:46px;border-radius:50%;border:0;background:var(--sup);display:grid;place-items:center;color:var(--verde-osc);cursor:pointer}
+.hdr-der{display:flex;gap:.5rem;align-items:center}
+.campana,.btn-tema{position:relative;width:46px;height:46px;border-radius:50%;border:0;background:var(--sup);display:grid;place-items:center;color:var(--verde-osc);cursor:pointer}
 .campana .punto{position:absolute;top:9px;right:10px;width:11px;height:11px;border-radius:50%;background:var(--no);border:2px solid var(--sup)}
 
 main{max-width:560px;margin:0 auto;padding:.3rem 1.1rem calc(var(--seg-bot) + 10rem)}
@@ -52,19 +83,19 @@ main{max-width:560px;margin:0 auto;padding:.3rem 1.1rem calc(var(--seg-bot) + 10
 .tabs-in{display:flex;width:100%;max-width:560px}
 .tab{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:.72rem;color:var(--suave);padding:.35rem 0;min-height:54px;cursor:pointer}
 .tab svg{width:25px;height:25px}
-.tab[aria-current="page"]{color:var(--verde);font-weight:600}
+.tab[aria-current="page"]{color:var(--verde-txt);font-weight:600}
 
 /* ---------- Botón ¿Otra duda? ---------- */
-.fab{position:fixed;right:max(1rem,calc(50% - 280px + 1rem));bottom:calc(var(--seg-bot) + 5.4rem);z-index:25;background:var(--maiz);color:var(--tinta);border:0;border-radius:999px;padding:.7rem 1.1rem;font-weight:600;box-shadow:0 6px 18px rgba(29,52,40,.25);display:flex;gap:.45rem;align-items:center;cursor:pointer}
+.fab{position:fixed;right:max(1rem,calc(50% - 280px + 1rem));bottom:calc(var(--seg-bot) + 5.4rem);z-index:25;background:var(--maiz);color:var(--sobre-maiz);border:0;border-radius:999px;padding:.7rem 1.1rem;font-weight:600;box-shadow:0 6px 18px rgba(29,52,40,.25);display:flex;gap:.45rem;align-items:center;cursor:pointer}
 
 /* ---------- Botones y campos ---------- */
 .btn{display:inline-flex;justify-content:center;align-items:center;gap:.45rem;font-weight:600;border-radius:14px;padding:.8rem 1.2rem;border:0;cursor:pointer;min-height:50px;text-decoration:none;text-align:center;line-height:1.3}
 .btn.prim{background:var(--verde);color:#fff}
 .btn.sec{background:var(--hoja);color:var(--verde-osc)}
-.btn.maiz{background:var(--maiz);color:var(--tinta)}
+.btn.maiz{background:var(--maiz);color:var(--sobre-maiz)}
 .btn.ancho{width:100%}
 .btn:disabled{opacity:.6;cursor:default}
-.campo{width:100%;padding:.8rem .9rem;border-radius:12px;border:1.5px solid var(--linea);background:#fff;font-size:1rem;margin:.3rem 0 .9rem}
+.campo{width:100%;padding:.8rem .9rem;border-radius:12px;border:1.5px solid var(--linea);background:var(--blanco);font-size:1rem;margin:.3rem 0 .9rem}
 textarea.campo{min-height:5rem;resize:vertical}
 label.et{display:block;font-weight:500;margin-top:.2rem}
 .chico{font-size:.88rem;color:var(--suave)}
@@ -72,37 +103,34 @@ label.et{display:block;font-weight:500;margin-top:.2rem}
 /* ---------- Inicio ---------- */
 .saludo h1{font-size:1.8rem;margin:.5rem 0 .1rem}
 .saludo p{color:var(--suave);margin:0}
-.revision{background:var(--maiz-claro);border:1.5px dashed #C79100;border-radius:12px;padding:.6rem .85rem;font-size:.85rem;margin:.4rem 0 .6rem}
 .consulta{background:var(--verde);color:#fff;border-radius:24px;padding:1.25rem 1.1rem 1rem;margin:1.1rem 0 1.3rem}
 .consulta h2{font-size:1.65rem;color:#fff}
 .consulta .ayuda{display:block;margin:.25rem 0 .75rem;color:#D3E6D9;font-size:.92rem}
-.buscador{width:100%;font-size:1.08rem;padding:.9rem 1rem;border-radius:14px;border:0;background:#fff;color:var(--tinta)}
+.buscador{width:100%;font-size:1.08rem;padding:.9rem 1rem;border-radius:14px;border:0;background:var(--blanco);color:var(--tinta)}
 .resultados{margin-top:.75rem;display:flex;flex-direction:column;gap:.55rem}
-.veredicto{background:#fff;color:var(--tinta);border-radius:16px;padding:.85rem .9rem;display:grid;grid-template-columns:auto 1fr;gap:.9rem;align-items:start}
+.veredicto{background:var(--blanco);color:var(--tinta);border-radius:16px;padding:.85rem .9rem;display:grid;grid-template-columns:auto 1fr;gap:.9rem;align-items:start}
 .veredicto strong{display:block;line-height:1.3}
 .veredicto p{margin:.25rem 0 0;font-size:.9rem;color:var(--suave)}
-.sema{display:flex;flex-direction:column;gap:5px;background:var(--tinta);border-radius:13px;padding:6px}
+.sema{display:flex;flex-direction:column;gap:5px;background:#1D3428;border-radius:13px;padding:6px}
 .sema i{width:17px;height:17px;border-radius:50%;background:#3E5247;display:block}
 .sema[data-e="no"] i:nth-child(1){background:var(--no);box-shadow:0 0 9px var(--no)}
 .sema[data-e="ojo"] i:nth-child(2){background:var(--ojo);box-shadow:0 0 9px var(--ojo)}
 .sema[data-e="si"] i:nth-child(3){background:#3DBA74;box-shadow:0 0 9px #3DBA74}
 .estado{display:block;font-weight:600;font-size:.95rem}
-.estado.si{color:var(--si)} .estado.ojo{color:#9A6B00} .estado.no{color:var(--no)}
-.sinres{background:#fff;color:var(--tinta);border-radius:16px;padding:.9rem}
+.estado.si{color:var(--si)} .estado.ojo{color:var(--ambar)} .estado.no{color:var(--no)}
+.sinres{background:var(--blanco);color:var(--tinta);border-radius:16px;padding:.9rem}
 .leyenda{margin:.8rem 0 0;font-size:.8rem;color:#D3E6D9;display:flex;flex-wrap:wrap;gap:.2rem .9rem;align-items:center}
 .leyenda span{display:inline-flex;align-items:center;gap:.35rem}
 .pun{width:10px;height:10px;border-radius:50%;display:inline-block}
 .pun.si{background:#3DBA74} .pun.ojo{background:var(--ojo)} .pun.no{background:var(--no)}
 .hoy{background:var(--maiz-claro);border-radius:20px;padding:1rem 1.1rem;margin:1.2rem 0}
-.hoy h2{font-size:1rem;font-style:italic;font-weight:500;color:#8A6200;margin-bottom:.25rem}
+.hoy h2{font-size:1rem;font-style:italic;font-weight:500;color:var(--ambar-t);margin-bottom:.25rem}
 .hoy p{font-family:'Lora',Georgia,serif;font-size:1.15rem;line-height:1.45;margin:0}
 .novedad-home{display:flex;gap:.7rem;align-items:center;width:100%;background:var(--sup);border:1.5px solid var(--maiz);border-radius:16px;padding:.8rem 1rem;text-align:left;cursor:pointer;margin:.2rem 0}
 .novedad-home b{display:block}
 .instalar{background:var(--sup);border-radius:16px;padding:.9rem 1rem;margin:1rem 0;border:1px solid var(--linea)}
 .instalar p{margin:0 0 .6rem}
-.pitch{background:var(--sup);border-radius:22px;padding:1.2rem 1.1rem;margin:1.6rem 0;border:1.5px solid var(--verde)}
-.pitch h2{font-size:1.35rem;margin-bottom:.4rem}
-.pitch ul{margin:.2rem 0 1rem;padding-left:1.2rem}
+.link-chico{display:block;width:100%;background:none;border:0;color:var(--suave);text-decoration:underline;font-size:.88rem;margin-top:.4rem;min-height:40px;cursor:pointer}
 
 /* ---------- Listas ---------- */
 .cab{margin:.6rem 0 1rem}
@@ -117,7 +145,6 @@ label.et{display:block;font-weight:500;margin-top:.2rem}
 .fila .t{display:block;font-weight:600;line-height:1.35}
 .fila .r{display:block;font-size:.85rem;color:var(--suave);line-height:1.4;margin-top:2px}
 .fila .ico{color:var(--suave);display:flex}
-.fila .ico.cand{color:#9A6B00}
 .preg{border-bottom:1px solid var(--linea)}
 .preg:last-child{border-bottom:0}
 .preg summary{list-style:none;cursor:pointer;padding:.9rem 1rem;font-weight:600;display:flex;justify-content:space-between;gap:.8rem;line-height:1.35}
@@ -139,14 +166,14 @@ label.et{display:block;font-weight:500;margin-top:.2rem}
 .articulo li{margin-bottom:.35rem}
 .articulo .intro{color:var(--suave)}
 .nota{background:var(--hoja);border-radius:14px;padding:.85rem 1rem;margin:1.2rem 0}
-.alerta{background:#FBE7E4;border-left:5px solid var(--no);border-radius:10px;padding:.85rem 1rem;margin:1rem 0}
+.alerta{background:var(--alerta-bg);border-left:5px solid var(--no);border-radius:10px;padding:.85rem 1rem;margin:1rem 0}
 .mas{margin-top:1.6rem}
 .legal{font-size:.8rem;color:var(--suave);margin-top:1.2rem}
 .panel{background:var(--sup);border-radius:18px;padding:1rem;border:1px solid var(--linea);margin:1rem 0}
 
 /* chips */
 .chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:.4rem 0 1rem}
-.chip{border:1.5px solid var(--linea);background:#fff;border-radius:999px;padding:.45rem .9rem;font-size:.92rem;cursor:pointer;min-height:42px}
+.chip{border:1.5px solid var(--linea);background:var(--blanco);border-radius:999px;padding:.45rem .9rem;font-size:.92rem;cursor:pointer;min-height:42px}
 .chip[aria-pressed="true"]{background:var(--verde);color:#fff;border-color:var(--verde)}
 
 /* menús */
@@ -187,8 +214,8 @@ label.et{display:block;font-weight:500;margin-top:.2rem}
 .tile.dia{background:var(--verde);border-color:var(--verde);color:#fff}
 .tile.dia .ti{background:rgba(255,255,255,.16);color:#fff}
 .tile.dia .s{color:#D3E6D9}
-.nuevo{background:var(--maiz);color:var(--tinta);font-size:.7rem;font-weight:600;border-radius:999px;padding:.1rem .55rem;margin-left:.5rem;vertical-align:middle}
-.prox{display:block;width:100%;text-align:left;background:var(--tinta);color:#fff;border:0;border-radius:22px;padding:1.1rem 1.1rem 1rem;margin:1.2rem 0;cursor:pointer}
+.nuevo{background:var(--maiz);color:var(--sobre-maiz);font-size:.7rem;font-weight:600;border-radius:999px;padding:.1rem .55rem;margin-left:.5rem;vertical-align:middle}
+.prox{display:block;width:100%;text-align:left;background:var(--oscuro);color:#fff;border:0;border-radius:22px;padding:1.1rem 1.1rem 1rem;margin:1.2rem 0;cursor:pointer}
 .prox-top{display:flex;align-items:center;gap:.85rem}
 .prox-n{font-family:'Lora',Georgia,serif;font-size:3.2rem;font-weight:700;line-height:1;color:var(--maiz)}
 .prox-l{font-size:.88rem;color:#D3E6D9;line-height:1.35}
@@ -196,23 +223,29 @@ label.et{display:block;font-weight:500;margin-top:.2rem}
 .prox-s{display:block;font-size:.92rem;color:#D3E6D9}
 .prox-c{display:inline-block;margin-top:.7rem;background:rgba(239,178,47,.18);color:var(--maiz);border-radius:999px;padding:.3rem .85rem;font-size:.85rem;font-weight:500}
 .cuenta{display:flex;align-items:center;gap:.8rem;margin:.4rem 0 .8rem}
-.cuenta .n{font-family:'Lora',Georgia,serif;font-size:3.4rem;font-weight:700;line-height:1;color:var(--verde)}
+.cuenta .n{font-family:'Lora',Georgia,serif;font-size:3.4rem;font-weight:700;line-height:1;color:var(--verde-txt)}
 
 .tile{position:relative}
 .tile.mini{min-height:128px}
 .tile.ancha{grid-column:1 / -1;min-height:0}
-.tile .lock{position:absolute;top:.75rem;right:.75rem;color:#9A6B00;display:flex}
-.tile .lock svg{width:20px;height:20px}
 .eti{display:inline-block;font-size:.72rem;font-weight:600;border-radius:999px;padding:.1rem .6rem;margin-left:.45rem;white-space:nowrap;vertical-align:middle;font-family:'Poppins',system-ui,sans-serif}
-.eti.si{background:#DDF0E4;color:#1F6B44} .eti.ojo{background:#FFF1CC;color:#7A5500} .eti.no{background:#FBE7E4;color:#A33328}
+.eti.si{background:var(--eti-si-bg);color:var(--eti-si-t)} .eti.ojo{background:var(--eti-ojo-bg);color:var(--eti-ojo-t)} .eti.no{background:var(--eti-no-bg);color:var(--eti-no-t)}
 .check .eti{margin-left:auto;flex:none}
 .check .eti + .borrar{margin-left:.5rem}
 .check.hecho .eti{text-decoration:none}
 
+/* escaneá una etiqueta */
+.foto-panel .btn svg{width:1.4em;height:1.4em}
+.consejos{margin:.9rem 0 .2rem;padding-left:1.15rem;font-size:.95rem;color:var(--suave)}
+.consejos li{margin-bottom:.25rem}
+.prog{height:12px;border-radius:99px;background:var(--hoja);overflow:hidden;margin-top:1rem}
+.prog i{display:block;height:100%;width:6%;background:var(--verde);border-radius:99px;transition:width .25s}
+.mini-foto{display:block;max-width:100%;max-height:170px;margin:.9rem auto 0;border-radius:12px;border:1px solid var(--linea)}
+.link-gal{display:block;width:100%;background:none;border:0;color:var(--verde-txt);text-decoration:underline;font-size:.95rem;margin-top:.5rem;min-height:44px;cursor:pointer}
 /* revisá una etiqueta */
 mark{border-radius:5px;padding:0 3px;color:var(--tinta)}
-mark.r{background:#F7C9C3} mark.a{background:#FBE3A0} mark.v{background:#CDE8D5}
-.etq-texto{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:.85rem .95rem;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}
+mark.r{background:var(--mark-r)} mark.a{background:var(--mark-a)} mark.v{background:var(--mark-v)}
+.etq-texto{background:var(--blanco);border:1px solid var(--linea);border-radius:14px;padding:.85rem .95rem;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}
 .hallazgo{display:flex;gap:.7rem;padding:.6rem 0;border-bottom:1px solid var(--linea)}
 .hallazgo:last-child{border-bottom:0}
 .hallazgo .pun{margin-top:.55rem;flex:none}
@@ -222,7 +255,7 @@ mark.r{background:#F7C9C3} mark.a{background:#FBE3A0} mark.v{background:#CDE8D5}
 
 /* mi intestino, mes a mes */
 .dia-grande{display:flex;align-items:center;gap:.9rem;margin:.4rem 0 1rem}
-.dia-grande .n{font-family:'Lora',Georgia,serif;font-size:4.2rem;font-weight:700;line-height:1;color:var(--verde)}
+.dia-grande .n{font-family:'Lora',Georgia,serif;font-size:4.2rem;font-weight:700;line-height:1;color:var(--verde-txt)}
 .dia-grande .t{font-size:1.02rem;color:var(--suave);line-height:1.3}
 .villi rect.v{fill:var(--verde)}
 .villi rect.b{fill:var(--linea)}
@@ -240,7 +273,7 @@ mark.r{background:#F7C9C3} mark.a{background:#FBE3A0} mark.v{background:#CDE8D5}
 .hito.bloq h3{color:var(--suave)}
 
 /* ---------- Hoja que sube desde abajo ---------- */
-.velo{position:fixed;inset:0;z-index:60;background:rgba(29,52,40,.5);display:flex;align-items:flex-end;justify-content:center}
+.velo{position:fixed;inset:0;z-index:90;background:var(--velo);display:flex;align-items:flex-end;justify-content:center}
 .hoja{background:var(--sup);width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:1.4rem 1.2rem calc(var(--seg-bot) + 1.4rem);max-height:92vh;overflow-y:auto;animation:sube .22s ease-out}
 .hoja h2{font-size:1.4rem;margin-bottom:.5rem}
 .hoja h3{font-size:1.08rem;margin:1.3rem 0 .2rem}
@@ -254,10 +287,12 @@ mark.r{background:#F7C9C3} mark.a{background:#FBE3A0} mark.v{background:#CDE8D5}
 .bienvenida-in{max-width:460px;margin:0 auto}
 .bienvenida .logo{width:84px;height:84px;border-radius:22px;display:block;margin-bottom:1.2rem}
 .bienvenida h1{font-size:2.1rem;margin-bottom:.5rem;color:var(--verde-osc)}
+.inst-bv{background:var(--hoja);border-radius:18px;padding:1rem 1.1rem;margin:0 0 1.5rem}
+.inst-bv p{margin:0 0 .8rem;font-size:1.02rem}
 .bienvenida p.bajada{font-size:1.05rem;color:var(--suave);margin-bottom:1.6rem}
 
 /* ---------- Aviso flotante ---------- */
-.toast{position:fixed;left:50%;bottom:calc(var(--seg-bot) + 6rem);transform:translateX(-50%);background:var(--tinta);color:#fff;padding:.7rem 1.1rem;border-radius:999px;z-index:80;font-size:.92rem;width:max-content;max-width:90vw;text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(var(--seg-bot) + 6rem);transform:translateX(-50%);background:var(--oscuro);color:#fff;padding:.7rem 1.1rem;border-radius:999px;z-index:100;font-size:.92rem;width:max-content;max-width:90vw;text-align:center}
 
 @media (prefers-reduced-motion:reduce){.hoja{animation:none}}
 </style>
@@ -266,10 +301,13 @@ mark.r{background:#F7C9C3} mark.a{background:#FBE3A0} mark.v{background:#CDE8D5}
 
 <header class="top">
   <div class="marca"><img src="icon-192.png" alt=""><span>Mi Mundo Sin Gluten</span></div>
+  <div class="hdr-der">
+    <button class="btn-tema" id="btnTema" aria-label="Cambiar a modo noche"></button>
   <button class="campana" id="btnCampana" aria-label="Novedades">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
     <span class="punto" id="puntoCampana" hidden></span>
   </button>
+  </div>
 </header>
 
 <main id="vista"></main>
@@ -310,7 +348,6 @@ mark.r{background:#F7C9C3} mark.a{background:#FBE3A0} mark.v{background:#CDE8D5}
 /* ================== BASE ================== */
 var C = window.CONTENIDO || {};
 var CFG = window.CONFIG || {};
-var MODO_REVISION = !CFG.SCRIPT_URL;
 var MAIL = CFG.MAIL_CONTACTO || '';
 ['novedades','tarjetas','semaforo','aprender','comer','vivir','faq','menus','recetas','cocinaSegura','listaBase']
   .forEach(function (k) { if (!Array.isArray(C[k])) C[k] = []; });
@@ -352,6 +389,8 @@ var ICO = {
   chev: '<path d="m9.5 6 6 6-6 6"/>',
   lupa: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
   mail: '<rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/>',
+  sol: '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/>',
+  luna: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
   chispa: '<path d="M11 3l1.9 5.6L18.5 10.5 12.9 12.4 11 18l-1.9-5.6L3.5 10.5 9.1 8.6z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
   cocino: '<path d="M5 11h14v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M3.5 11h17M9 7c0-1.2 1-1.5 1-2.6M13 7c0-1.2 1-1.5 1-2.6"/>',
   mensajes: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"/><path d="M8 9h8M8 12h5"/>',
@@ -359,6 +398,7 @@ var ICO = {
   detective: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8M8 10.5l1.8 1.8L13 8.8"/>',
   carrito: '<path d="M3.5 4.5h2.2l2 10h9.6l1.9-7.5H6.6"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="16.5" cy="19" r="1.4"/>',
   informe: '<path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><path d="M14 3.5V8h4M9 14h2l1-2.5 1.5 4 1-1.5H16"/>',
+  camara: '<path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.2-2h5.6L16 7h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.4"/>',
   etiqueta: '<path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 9h8M8 12h8M8 15h5"/>',
   intestino: '<path d="M12 21v-8"/><path d="M12 13c0-3.5-2.5-6-6-6 0 3.5 2.5 6 6 6z"/><path d="M12 15c0-3 2-5.5 6-5.5 0 3.2-2.2 5.5-6 5.5z"/>'
 };
@@ -373,13 +413,6 @@ function porPais(html) {
     .replace(/\[AR\]([\s\S]*?)\[\/AR\]/g, ar ? '$1' : '')
     .replace(/\[OTRO\]([\s\S]*?)\[\/OTRO\]/g, ar ? '' : '$1');
 }
-function premium() {
-  if (MODO_REVISION) return true;
-  var a = LS.get('acceso', null);
-  return !!(a && a.activa);
-}
-function abierto(it) { return !!(it && it.gratis) || premium(); }
-var HERRAMIENTAS_PREMIUM = { diario: 1, mozo: 1, cocina: 1, compras: 1, cocino: 1, mensajes: 1, lugar: 1, detective: 1, informe: 1, super: 1 };
 
 /* ================== TAMAÑO DE LETRA ================== */
 function aplicarLetra() { document.documentElement.setAttribute('data-letra', String(LS.get('letra', 0))); }
@@ -537,36 +570,16 @@ function pintarSemaforo(q) {
 /* ================== FILAS ================== */
 function fila(it, tipo) {
   if (!it) return '';
-  var cand = !abierto(it);
   return '<button class="fila" data-tipo="' + tipo + '" data-id="' + esc(it.id) + '">' +
     '<span class="txt"><span class="t">' + esc(it.titulo) + (esNuevo(it) ? '<span class="nuevo">Nuevo</span>' : '') + '</span>' + (it.resumen ? '<span class="r">' + esc(it.resumen) + '</span>' : '') + '</span>' +
-    '<span class="ico' + (cand ? ' cand' : '') + '">' + svg(cand ? 'cand' : 'chev') + '</span></button>';
+    '<span class="ico">' + svg('chev') + '</span></button>';
 }
 function filaTool(tool, titulo, resumen) {
-  var cand = HERRAMIENTAS_PREMIUM[tool] && !premium();
   return '<button class="fila" data-tool="' + tool + '">' +
     '<span class="txt"><span class="t">' + esc(titulo) + '</span>' + (resumen ? '<span class="r">' + esc(resumen) + '</span>' : '') + '</span>' +
-    '<span class="ico' + (cand ? ' cand' : '') + '">' + svg(cand ? 'cand' : 'chev') + '</span></button>';
+    '<span class="ico">' + svg('chev') + '</span></button>';
 }
 function cab(t, p) { return '<div class="cab"><h1>' + esc(t) + '</h1>' + (p ? '<p>' + esc(p) + '</p>' : '') + '</div>'; }
-function bannerRevision() {
-  return MODO_REVISION ? '<div class="revision"><strong>Modo revisión:</strong> todavía no está conectado el cobro, por eso ves todo abierto. Cuando cargues la dirección de la planilla en config.js, se activan los candados.</div>' : '';
-}
-function pitchHTML() {
-  if (premium()) return '';
-  return '<section class="pitch"><h2>Tu app completa</h2><p>Con un único pago se abren:</p><ul>' +
-    '<li>Revisión de etiquetas sin límite</li>' +
-    '<li>Qué cocinar con lo que tenés, mensajes listos y el detective del gluten escondido</li>' +
-    '<li>Medidor de confianza para restaurantes y lista de compras con semáforo</li>' +
-    '<li>Informe de tu diario para llevar a tu médico</li>' +
-    '<li>' + vis(C.menus).length + ' menús semanales listos para seguir</li>' +
-    '<li>' + vis(C.recetas).length + ' recetas sin TACC paso a paso</li>' +
-    '<li>La guía para comer afuera, reuniones, viajes y chicos</li>' +
-    '<li>Tu diario de síntomas y la tarjeta para el mozo</li>' +
-    '<li>Todo el contenido nuevo que se sume, sin pagar de nuevo</li>' +
-    '</ul><button class="btn prim ancho" data-tool="activar">Activar mi app completa</button></section>';
-}
-
 /* ================== TARJETAS DE INICIO ================== */
 function tilesHTML() {
   var f = LS.get('inicioDieta', null);
@@ -574,7 +587,7 @@ function tilesHTML() {
   var tit = dias == null ? 'Mi intestino, mes a mes' : (dias <= 0 ? 'Hoy empezás' : 'Llevás ' + dias + (dias === 1 ? ' día' : ' días'));
   var sub = dias == null ? 'Contá tus días y mirá cómo suele ir la recuperación.' : 'cuidando tu intestino. Mirá tu camino.';
   return '<div class="tiles">' +
-    '<button class="tile" data-tool="etiqueta"><span class="ti">' + svg('etiqueta') + '</span><b>Revisá una etiqueta</b><span class="s">Pegá los ingredientes y te marco dónde está el gluten.</span></button>' +
+    '<button class="tile" data-tool="etiqueta"><span class="ti">' + svg('etiqueta') + '</span><b>Escaneá una etiqueta</b><span class="s">Sacale una foto a los ingredientes y te marco dónde está el gluten.</span></button>' +
     '<button class="tile dia" data-tool="intestino"><span class="ti">' + svg('intestino') + '</span><b>' + esc(tit) + '</b><span class="s">' + esc(sub) + '</span></button></div>';
 }
 var FECHA_SORPRESAS = '2026-10-07';
@@ -591,10 +604,9 @@ function sorpresasHTML() {
   var nuevo = diasDesde(FECHA_SORPRESAS) <= 30;
   return '<section class="bloque" style="margin-top:.4rem"><h2>Sorpresas para tu día a día</h2><div class="tiles" style="margin-top:.6rem">' +
     SORPRESAS.map(function (x) {
-      var cand = HERRAMIENTAS_PREMIUM[x[0]] && !premium();
       return '<button class="tile mini' + (x[4] ? ' ' + x[4] : '') + '" data-tool="' + x[0] + '"><span class="ti">' + svg(x[1]) + '</span>' +
         '<b>' + esc(x[2]) + (nuevo ? '<span class="nuevo">Nuevo</span>' : '') + '</b><span class="s">' + esc(x[3]) + '</span>' +
-        (cand ? '<span class="lock">' + svg('cand') + '</span>' : '') + '</button>';
+        '</button>';
     }).join('') + '</div></section>';
 }
 function proxCardHTML() {
@@ -603,20 +615,84 @@ function proxCardHTML() {
   return '<button class="prox" data-prox="' + p.tipo + ':' + esc(p.it.id) + '">' +
     '<span class="prox-top"><span class="prox-n">' + d + '</span><span class="prox-l">' + (d === 1 ? 'día' : 'días') + ' para que se abra<br>el ' + esc(fechaCorta(p.it.desde)) + '</span></span>' +
     '<b class="prox-t">' + esc(p.it.titulo) + '</b><span class="prox-s">' + esc(p.it.resumen || '') + '</span>' +
-    '<span class="prox-c">' + (premium() ? 'Es parte de tu app. Se abre solo ese día.' : 'Lo reciben quienes tienen la app completa.') + '</span></button>';
+    '<span class="prox-c">Es parte de tu app. Se abre solo ese día.</span></button>';
 }
 
 /* ================== INSTALAR ================== */
 var eventoInstalar = null;
-var esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+var esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+var esAndroid = /android/i.test(navigator.userAgent);
 var instalada = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); eventoInstalar = e; if (tabActual === 'inicio') pintarVista(); });
-window.addEventListener('appinstalled', function () { eventoInstalar = null; instalada = true; if (tabActual === 'inicio') pintarVista(); });
+window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); eventoInstalar = e; });
+window.addEventListener('appinstalled', function () {
+  eventoInstalar = null; instalada = true; LS.set('iosOk', true);
+  aviso('¡Listo! La app quedó instalada.');
+  if (tabActual === 'inicio' || tabActual === 'cosas') pintarVista();
+});
 function instalarHTML() {
-  if (instalada) return '';
-  if (eventoInstalar) return '<div class="instalar"><p><strong>Tenela a mano.</strong> Instalala en tu celular y entrá con un toque, como cualquier app.</p><button class="btn prim ancho" data-tool="instalar">Instalar en mi celular</button></div>';
-  if (esIOS && !LS.get('iosOk', false)) return '<div class="instalar"><p><strong>Tenela a mano en tu iPhone:</strong> tocá el botón Compartir de Safari (el cuadrado con la flecha) y después "Agregar a inicio".</p><button class="btn sec ancho" data-tool="iosOk">Listo, ya la agregué</button></div>';
-  return '';
+  if (instalada || LS.get('iosOk', false)) return '';
+  return '<div class="instalar"><p><strong>Tenela a mano.</strong> Instalala y entrá con un toque desde la pantalla de inicio, como cualquier app.</p>' +
+    '<button class="btn prim ancho" data-tool="instalar">Instalar la aplicación</button>' +
+    '<button class="link-chico" data-tool="iosOk">Ya la instalé</button></div>';
+}
+var PASOS_INSTALAR = {
+  ios: ['En iPhone o iPad', ['Abrí esta página en <strong>Safari</strong>.', 'Tocá el botón <strong>Compartir</strong> (el cuadrado con la flecha hacia arriba). Si no lo ves, tocá antes los tres puntitos <strong>···</strong>.', 'Elegí <strong>Agregar a inicio</strong>. Si no aparece, deslizá la lista hacia abajo o tocá <strong>Ver más</strong>.', 'Dejá activada la opción <strong>Abrir como app web</strong> y tocá <strong>Agregar</strong>.']],
+  android: ['En Android', ['Abrí esta página en <strong>Chrome</strong>.', 'Tocá los tres puntos <strong>⋮</strong> de arriba a la derecha.', 'Elegí <strong>Instalar app</strong> o <strong>Agregar a la pantalla principal</strong>.', 'Confirmá con <strong>Instalar</strong>.']],
+  pc: ['En la computadora', ['Abrí esta página en <strong>Chrome</strong> o <strong>Edge</strong>.', 'Buscá el ícono de instalar al final de la barra de direcciones (una pantallita con una flecha).', 'Si no lo ves, abrí el menú del navegador <strong>⋮</strong> y elegí <strong>Instalar</strong> o <strong>Instalar app</strong>.', 'Confirmá con <strong>Instalar</strong>.']]
+};
+function pasosHTML(k) {
+  return '<ol class="pasos">' + PASOS_INSTALAR[k][1].map(function (x) { return '<li><span>' + x + '</span></li>'; }).join('') + '</ol>';
+}
+function abrirInstalar() {
+  if (instalada) {
+    abrirHoja('<h2>Ya la tenés instalada</h2><p>Estás usando la app instalada. Para abrirla, buscá el ícono <strong>Mi Mundo</strong> en la pantalla de inicio.</p><button class="btn prim ancho" data-cerrar>Seguir</button>');
+    return;
+  }
+  if (eventoInstalar) {
+    var ev = eventoInstalar; ev.prompt();
+    ev.userChoice.then(function (r) { eventoInstalar = null; if (r && r.outcome === 'accepted') LS.set('iosOk', true); pintarVista(); });
+    return;
+  }
+  var plat = esIOS ? 'ios' : (esAndroid ? 'android' : 'pc');
+  var otros = ['ios', 'android', 'pc'].filter(function (k) { return k !== plat; });
+  abrirHoja(
+    '<h2>Instalar la aplicación</h2><p>Se instala en un minuto, sin ir a ninguna tienda. Después la abrís desde la pantalla de inicio, como cualquier app.</p>' +
+    '<h3>' + PASOS_INSTALAR[plat][0] + '</h3>' + pasosHTML(plat) +
+    '<p class="chico">Si ves palabras un poco distintas, buscá una opción parecida: cambian según el celular y la versión.</p>' +
+    otros.map(function (k) { return '<details class="preg" style="margin-top:.6rem;border:1px solid var(--linea);border-radius:14px"><summary>' + PASOS_INSTALAR[k][0] + '</summary><div style="padding:0 1rem">' + pasosHTML(k) + '</div></details>'; }).join('') +
+    '<button class="btn sec ancho" data-tool="iosOk" data-cerrar style="margin-top:1rem">Ya la instalé</button>'
+  );
+}
+
+/* ================== DÍA Y NOCHE ================== */
+var mqOscuro = window.matchMedia('(prefers-color-scheme: dark)');
+function temaGuardado() { var t = LS.get('tema', 'auto'); return (t === 'dia' || t === 'noche') ? t : 'auto'; }
+function esNoche() { var t = temaGuardado(); return t === 'noche' || (t === 'auto' && mqOscuro.matches); }
+function aplicarTema() {
+  document.documentElement.setAttribute('data-tema', temaGuardado());
+  var noche = esNoche();
+  var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', noche ? '#0F1713' : '#EDF2E8');
+  var b = $('#btnTema');
+  if (b) { b.innerHTML = svg(noche ? 'sol' : 'luna'); b.setAttribute('aria-label', noche ? 'Cambiar a modo día' : 'Cambiar a modo noche'); }
+}
+function elegirTema(t) { LS.set('tema', t); aplicarTema(); if (tabActual === 'cosas') pintarVista(); }
+$('#btnTema').addEventListener('click', function () {
+  var n = !esNoche(); elegirTema(n ? 'noche' : 'dia'); aviso(n ? 'Modo noche' : 'Modo día');
+});
+if (mqOscuro.addEventListener) mqOscuro.addEventListener('change', aplicarTema); else if (mqOscuro.addListener) mqOscuro.addListener(aplicarTema);
+function abrirTemaHoja() {
+  var t = temaGuardado();
+  abrirHoja('<h2>Modo día o noche</h2><div class="chips">' +
+    [['auto', 'Automático'], ['dia', 'Día'], ['noche', 'Noche']].map(function (x) { return '<button class="chip" data-tm="' + x[0] + '" aria-pressed="' + (x[0] === t) + '">' + x[1] + '</button>'; }).join('') +
+    '</div><p class="chico">Automático sigue lo que tenga tu celular o tu compu. El modo noche cansa menos la vista cuando hay poca luz.</p>',
+    function (h) {
+      $$('[data-tm]', h).forEach(function (c) {
+        c.addEventListener('click', function () {
+          elegirTema(c.getAttribute('data-tm'));
+          $$('[data-tm]', h).forEach(function (o) { o.setAttribute('aria-pressed', o === c ? 'true' : 'false'); });
+        });
+      });
+    });
 }
 
 /* ================== VISTAS ================== */
@@ -643,7 +719,6 @@ var VISTAS = {
     var nuevas = novedadesSinVer();
     var previo = $('#busca') ? $('#busca').value : '';
     main.innerHTML =
-      bannerRevision() +
       '<section class="saludo"><h1>Hola' + (p.nombre ? ', ' + esc(p.nombre) : '') + '</h1><p>¿Qué querés saber hoy?</p></section>' +
       '<section class="consulta" aria-labelledby="tCons"><h2 id="tCons">¿Puedo comer…?</h2>' +
       '<label class="ayuda" for="busca">Escribí un alimento y te digo si es apto.</label>' +
@@ -659,45 +734,42 @@ var VISTAS = {
       '<section class="bloque"><h2>Para empezar</h2><div class="lista">' +
       fila(byId(C.aprender, 'que-es'), 'aprender') + fila(byId(C.aprender, 'sintomas'), 'aprender') +
       fila(byId(C.comer, 'reglas'), 'comer') + fila(byId(C.vivir, 'primeros-dias'), 'vivir') +
-      '</div></section>' + pitchHTML();
+      '</div></section>';
     var inp = $('#busca');
     inp.addEventListener('input', function () { pintarSemaforo(inp.value); });
     if (previo) { inp.value = previo; pintarSemaforo(previo); }
   },
   aprender: function () {
-    main.innerHTML = bannerRevision() + cab('Aprender', 'Todo lo que necesitás saber sobre la celiaquía.') +
+    main.innerHTML = cab('Aprender', 'Todo lo que necesitás saber sobre la celiaquía.') +
       '<div class="lista">' + vis(C.aprender).map(function (a) { return fila(a, 'aprender'); }).join('') + '</div>' +
       '<section class="bloque"><h2>Dudas frecuentes</h2><div class="lista">' + C.faq.map(function (f) {
-        if (!abierto(f)) return '<button class="fila" data-tool="activar"><span class="txt"><span class="t">' + esc(f.p) + '</span></span><span class="ico cand">' + svg('cand') + '</span></button>';
         return '<details class="preg"><summary>' + esc(f.p) + '</summary><p>' + esc(f.r) + '</p></details>';
       }).join('') + '</div>' +
-      '<div class="lista" style="margin-top:.8rem">' + filaTool('ia', 'Preguntale a una IA', 'Para las dudas que no están en la app.') + '</div></section>' + pitchHTML();
+      '<div class="lista" style="margin-top:.8rem">' + filaTool('ia', 'Preguntale a una IA', 'Para las dudas que no están en la app.') + '</div></section>';
   },
   comer: function () {
-    main.innerHTML = bannerRevision() + cab('Comer', 'La dieta, menús de toda la semana y recetas.') +
+    main.innerHTML = cab('Comer', 'La dieta, menús de toda la semana y recetas.') +
       '<div class="lista">' + filaTool('semaforo', '¿Puedo comer…?', 'Consultá cualquier alimento en el semáforo.') +
-      filaTool('etiqueta', 'Revisá una etiqueta', 'Pegá los ingredientes y te marco dónde está el gluten.') +
+      filaTool('etiqueta', 'Escaneá una etiqueta', 'Sacale una foto a los ingredientes y te marco dónde está el gluten.') +
       filaTool('cocino', '¿Qué cocino hoy?', 'Marcá lo que tenés y te digo qué preparar.') +
       filaTool('super', 'Súper con semáforo', 'Tu lista de compras con el semáforo en cada cosa.') + '</div>' +
       '<section class="bloque"><h2>La dieta sin TACC</h2><div class="lista">' + vis(C.comer).map(function (a) { return fila(a, 'comer'); }).join('') + '</div></section>' +
       '<section class="bloque"><h2>Menús semanales</h2><div class="lista">' + vis(C.menus).map(function (m) { return fila(m, 'menu'); }).join('') + '</div></section>' +
-      '<section class="bloque"><h2>Recetas</h2><div class="lista">' + vis(C.recetas).map(function (r) { return fila(r, 'receta'); }).join('') + '</div></section>' + pitchHTML();
+      '<section class="bloque"><h2>Recetas</h2><div class="lista">' + vis(C.recetas).map(function (r) { return fila(r, 'receta'); }).join('') + '</div></section>';
   },
   vivir: function () {
-    main.innerHTML = bannerRevision() + cab('Vivir', 'El día a día: afuera, en casa, con los chicos y con vos misma.') +
+    main.innerHTML = cab('Vivir', 'El día a día: afuera, en casa, con los chicos y con vos misma.') +
       '<div class="lista">' + filaTool('intestino', 'Mi intestino, mes a mes', 'Contá tus días y mirá cómo suele ir la recuperación.') + '</div>' +
       '<section class="bloque"><h2>Para cada situación</h2><div class="lista">' + vis(C.vivir).map(function (a) { return fila(a, 'vivir'); }).join('') + '</div></section>' +
       '<section class="bloque"><h2>Para llevar en el celular</h2><div class="lista">' +
       filaTool('mozo', 'Tarjeta para el mozo', 'Mostrala en un restaurante. En español, inglés y portugués.') +
       filaTool('mensajes', 'Mensajes listos', 'Para avisar que tenés celiaquía, sin dar vueltas.') +
-      filaTool('lugar', '¿Es seguro este lugar?', 'Medí qué tan confiable es un restaurante antes de ir.') + '</div></section>' + pitchHTML();
+      filaTool('lugar', '¿Es seguro este lugar?', 'Medí qué tan confiable es un restaurante antes de ir.') + '</div></section>';
   },
   cosas: function () {
-    var a = LS.get('acceso', null);
-    var estado = MODO_REVISION ? 'Modo revisión' : (premium() ? 'Activada' + (a && a.email ? ' con ' + a.email : '') : 'Versión gratis: tocá para activarla');
-    main.innerHTML = bannerRevision() + cab('Mis cosas', 'Tus herramientas y tus ajustes.') +
+    main.innerHTML = cab('Mis cosas', 'Tus herramientas y tus ajustes.') +
       '<div class="lista">' +
-      filaTool('etiqueta', 'Revisá una etiqueta', 'Pegá los ingredientes y te marco dónde está el gluten.') +
+      filaTool('etiqueta', 'Escaneá una etiqueta', 'Sacale una foto a los ingredientes y te marco dónde está el gluten.') +
       filaTool('intestino', 'Mi intestino, mes a mes', 'Tu camino de recuperación, día por día.') +
       filaTool('ia', 'Preguntale a una IA', 'Tu duda ya escrita, lista para consultar.') +
       filaTool('cocino', '¿Qué cocino hoy?', 'Marcá lo que tenés y te digo qué preparar.') +
@@ -710,7 +782,8 @@ var VISTAS = {
       filaTool('cocina', 'Revisar mi cocina', 'Una lista para dejar tu cocina segura.') +
       filaTool('super', 'Súper con semáforo', 'Tu lista de compras con el semáforo en cada cosa.') +
       '</div><section class="bloque"><h2>Ajustes</h2><div class="lista">' +
-      filaTool('activar', 'Mi app completa', estado) +
+      filaTool('instalar', 'Instalar la aplicación', instalada ? 'Ya la tenés instalada.' : 'Tenela en la pantalla de inicio de tu celular o de tu compu.') +
+      filaTool('tema', 'Modo día o noche', ['Automático', 'Día', 'Noche'][['auto', 'dia', 'noche'].indexOf(LS.get('tema', 'auto'))] || 'Automático') +
       filaTool('perfil', 'Mis datos', 'Tu nombre y tu país.') +
       filaTool('letra', 'Tamaño de la letra', ['Normal', 'Grande', 'Muy grande'][LS.get('letra', 0)]) +
       filaTool('novedades', 'Novedades', 'Lo último que se sumó a la app.') +
@@ -724,7 +797,6 @@ var VISTAS = {
 var FUENTES = { aprender: 'aprender', comer: 'comer', vivir: 'vivir', menu: 'menus', receta: 'recetas' };
 function abrirItem(tipo, id) {
   var it = byId(C[FUENTES[tipo]] || [], id); if (!it || !visible(it)) return;
-  if (!abierto(it)) { abrirActivar(); return; }
   if (tipo === 'menu') abrirMenu(it);
   else if (tipo === 'receta') abrirReceta(it);
   else abrirArticulo(it);
@@ -983,63 +1055,8 @@ function abrirLetraHoja() {
   });
 }
 
-/* ================== ACTIVAR (PAGO ÚNICO) ================== */
-function consultarCompra(email) {
-  var url = CFG.SCRIPT_URL + (CFG.SCRIPT_URL.indexOf('?') >= 0 ? '&' : '?') + 'email=' + encodeURIComponent(email);
-  return fetch(url, { method: 'GET', redirect: 'follow', cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); });
-}
-function abrirActivar() {
-  if (MODO_REVISION) { aviso('Modo revisión: la app está completa mientras no conectes el cobro.'); return; }
-  var a = LS.get('acceso', null);
-  if (a && a.activa) {
-    abrirHoja('<h2>Tu app completa está activada</h2><p>La activaste con <strong>' + esc(a.email) + '</strong>. Es tuya para siempre, con todo lo nuevo que se sume.</p><button class="btn prim ancho" data-cerrar>Seguir</button>');
-    return;
-  }
-  abrirHoja(
-    '<h2>Activá tu app completa</h2>' +
-    '<p>Se abren los menús, las recetas, la guía para el día a día y tus herramientas. Es un pago único: la app queda tuya para siempre, con todo lo nuevo que se sume.</p>' +
-    (CFG.LINK_COMPRA ? '<a class="btn prim ancho" href="' + esc(CFG.LINK_COMPRA) + '" target="_blank" rel="noopener">Comprar la app completa</a>' : '') +
-    '<h3>¿Ya la compraste?</h3><p class="chico">Escribí el correo con el que pagaste.</p>' +
-    '<input id="aMail" class="campo" type="email" inputmode="email" autocomplete="email" placeholder="tucorreo@ejemplo.com">' +
-    '<button class="btn sec ancho" id="aBtn">Activar con mi correo</button><p class="msg" id="aMsg" role="status"></p>',
-    function (h) {
-      var btn = $('#aBtn', h), msg = $('#aMsg', h), inp = $('#aMail', h);
-      function activar() {
-        var email = inp.value.trim().toLowerCase();
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = 'msg error'; msg.textContent = 'Revisá el correo: parece que le falta algo.'; inp.focus(); return; }
-        btn.disabled = true; btn.textContent = 'Revisando…'; msg.textContent = '';
-        consultarCompra(email).then(function (d) {
-          if (d && d.activa === true) {
-            LS.set('acceso', { email: email, activa: true, chequeo: Date.now() });
-            volver(); pintarVista(); aviso('¡Listo! Tu app completa está activada.');
-          } else {
-            msg.className = 'msg error';
-            msg.textContent = 'No encontramos una compra con ese correo. Revisá que sea el mismo con el que pagaste.' + (MAIL ? ' Si sigue sin funcionar, escribime a ' + MAIL + '.' : '');
-          }
-        }).catch(function () {
-          msg.className = 'msg error'; msg.textContent = 'No se pudo revisar ahora. Fijate que tengas internet y probá de nuevo.';
-        }).then(function () { btn.disabled = false; btn.textContent = 'Activar con mi correo'; });
-      }
-      btn.addEventListener('click', activar);
-      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') activar(); });
-    }
-  );
-}
-/* Revisión silenciosa cada 7 días: si la compra se reembolsó, se cierra el acceso. */
-function revisarAcceso() {
-  if (MODO_REVISION || !navigator.onLine) return;
-  var a = LS.get('acceso', null);
-  if (!a || !a.activa || (Date.now() - (a.chequeo || 0)) < 7 * 86400000) return;
-  consultarCompra(a.email).then(function (d) {
-    if (d && d.activa === false) { a.activa = false; LS.set('acceso', a); pintarVista(); }
-    else if (d && d.activa === true) { a.chequeo = Date.now(); LS.set('acceso', a); }
-  }).catch(function () {});
-}
-
 /* ================== REVISÁ UNA ETIQUETA ================== */
 var SEV = { v: 0, a: 1, r: 2 };
-var USOS_GRATIS = 3;
 function normMap(s) {
   var n = '', map = [];
   for (var i = 0; i < s.length; i++) {
@@ -1091,7 +1108,8 @@ function analizarEtiqueta(texto) {
     amarillo: lista.some(function (h) { return h.t === 'a'; })
   };
 }
-function resultadoEtiquetaHTML(r) {
+function resultadoEtiquetaHTML(r, op) {
+  op = op || {};
   var sello = porPais('[AR]el logo oficial Sin TACC[/AR][OTRO]el sello "sin gluten" de tu país[/OTRO]');
   var e, titulo, estado, desc;
   if (r.rojo) {
@@ -1100,6 +1118,9 @@ function resultadoEtiquetaHTML(r) {
   } else if (r.amarillo) {
     e = 'ojo'; titulo = 'Hay ingredientes dudosos'; estado = 'Solo si tiene el sello';
     desc = 'Marqué en amarillo lo que no aclara de qué cereal viene. Si el envase no tiene ' + sello + ', no lo des por apto.';
+  } else if (op.foto && op.baja) {
+    e = 'ojo'; titulo = 'No pude leer bien la etiqueta'; estado = 'No te guíes por esta foto';
+    desc = 'Sacá otra foto más cerca, con buena luz y apuntando a la lista de ingredientes. O pegá los ingredientes a mano. Mientras tanto, no la des por apta: fijate que el envase tenga ' + sello + '.';
   } else {
     e = 'ojo'; titulo = 'No encontré gluten en los ingredientes'; estado = 'Falta confirmar el sello';
     desc = 'Esto no es una garantía: el producto puede contaminarse en la fábrica. Fijate que el envase tenga ' + sello + '.' +
@@ -1108,47 +1129,152 @@ function resultadoEtiquetaHTML(r) {
   var leyenda = '<mark class="r">rojo: gluten o advertencia</mark> <mark class="a">amarillo: dudoso</mark>' + (r.claim ? ' <mark class="v">verde: dice "sin gluten"</mark>' : '');
   return '<div class="veredicto panel"><span class="sema" data-e="' + e + '" aria-hidden="true"><i></i><i></i><i></i></span>' +
     '<div><strong>' + esc(titulo) + '</strong><span class="estado ' + e + '">' + estado + '</span><p>' + desc + '</p></div></div>' +
+    (op.foto ? '<div class="nota"><strong>Esto es lo que leí de tu foto.</strong> Revisá que coincida con el envase.' + (op.baja && (r.rojo || r.amarillo) ? ' La foto se leyó con poca calidad, así que puede faltar algo.' : '') + ' Si falta o está mal alguna palabra, corregila en el cuadro de abajo y tocá <b>Revisar ingredientes</b>.</div>' : '') +
     (r.hall.length ? '<h2>Qué encontré</h2><div class="panel">' + r.hall.map(function (h) {
       return '<div class="hallazgo"><i class="pun ' + (h.t === 'r' ? 'no' : 'ojo') + '"></i><div><strong>' + esc(h.n) + '</strong><p>' + esc(porPais(h.d)) + '</p></div></div>';
     }).join('') + '</div>' : '') +
-    '<h2>Tu texto, marcado</h2><div class="etq-texto">' + r.html + '</div><p class="chico" style="margin-top:.6rem">' + leyenda + '</p>';
+    '<h2>' + (op.foto ? 'Lo que leí de tu foto, marcado' : 'Tu texto, marcado') + '</h2><div class="etq-texto">' + r.html + '</div><p class="chico" style="margin-top:.6rem">' + leyenda + '</p>';
 }
+/* ---------- Lector de fotos: lee el texto de la etiqueta en el propio celular (la foto no se envía a ningún lado) ---------- */
+var CLAVES_FUZZY = ['trigo', 'avena', 'cebada', 'centeno', 'malta', 'gluten', 'harina', 'semola', 'salvado', 'espelta', 'cerveza', 'triticale', 'cuscus', 'bulgur', 'seitan'];
+function aSinTilde(t) { return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+function dist1(a, b) {
+  if (a === b) return true; var la = a.length, lb = b.length; if (Math.abs(la - lb) > 1) return false;
+  var i = 0; while (i < la && i < lb && a.charAt(i) === b.charAt(i)) i++;
+  if (la === lb) return a.slice(i + 1) === b.slice(i + 1);
+  if (la > lb) return a.slice(i + 1) === b.slice(i);
+  return b.slice(i + 1) === a.slice(i);
+}
+/* palabras que la foto pudo leer mal y que se parecen a un cereal con gluten (por ejemplo "trlgo") */
+function palabrasSospechosas(texto) {
+  var out = [], vistos = {};
+  aSinTilde(texto).split(/[^a-z]+/).forEach(function (w) {
+    if (w.length < 5 || vistos[w]) return; vistos[w] = 1;
+    for (var k = 0; k < CLAVES_FUZZY.length; k++) {
+      var c = CLAVES_FUZZY[k];
+      if (w !== c && w.charAt(0) === c.charAt(0) && dist1(w, c) && !(w.length === c.length + 1 && w.slice(0, c.length) === c)) { out.push({ leido: w, parecido: c }); break; }
+    }
+  });
+  return out;
+}
+var OCRX = { cargando: null };
+function cargarOCR() {
+  if (window.Tesseract) return Promise.resolve();
+  if (OCRX.cargando) return OCRX.cargando;
+  OCRX.cargando = new Promise(function (ok, mal) {
+    var sc = document.createElement('script'); sc.src = 'ocr/tesseract.min.js';
+    sc.onload = ok; sc.onerror = function () { OCRX.cargando = null; mal(new Error('No se pudo cargar el lector')); };
+    document.head.appendChild(sc);
+  });
+  return OCRX.cargando;
+}
+function absURL(r) { return new URL(r, location.href).href.replace(/\/$/, ''); }
+/* achica la foto, la pasa a grises y le sube el contraste para que se lea mejor */
+function prepararFoto(file) {
+  return new Promise(function (ok, mal) {
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () {
+      var w = img.naturalWidth, h = img.naturalHeight, MAX = 2400, k = Math.min(1, MAX / Math.max(w, h));
+      if (Math.max(w, h) < 1300) k = 1300 / Math.max(w, h);
+      var c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
+      var cx = c.getContext('2d', { willReadFrequently: true }); cx.drawImage(img, 0, 0, c.width, c.height);
+      try {
+        var d = cx.getImageData(0, 0, c.width, c.height), px = d.data, hist = new Array(256).fill(0), n = px.length / 4;
+        for (var q = 0; q < px.length; q += 4) { var g = (px[q] * 0.299 + px[q + 1] * 0.587 + px[q + 2] * 0.114) | 0; px[q] = g; hist[g]++; }
+        var acum = 0, lo = 0, hi = 255; for (var a = 0; a < 256; a++) { acum += hist[a]; if (acum >= n * 0.02) { lo = a; break; } }
+        acum = 0; for (var b = 255; b >= 0; b--) { acum += hist[b]; if (acum >= n * 0.02) { hi = b; break; } }
+        var rango = Math.max(40, hi - lo);
+        for (var z = 0; z < px.length; z += 4) { var v = Math.max(0, Math.min(255, ((px[z] - lo) * 255 / rango) | 0)); px[z] = px[z + 1] = px[z + 2] = v; }
+        cx.putImageData(d, 0, 0);
+      } catch (e) { }
+      ok({ canvas: c, url: url });
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); mal(new Error('No se pudo abrir la foto')); };
+    img.src = url;
+  });
+}
+function leerFoto(file, onEstado) {
+  var worker = null, miniUrl = null;
+  return prepararFoto(file).then(function (pf) {
+    miniUrl = pf.url;
+    onEstado('Preparando el lector…', 4);
+    return cargarOCR().then(function () {
+      return Tesseract.createWorker('spa', 1, {
+        workerPath: absURL('ocr/worker.min.js'), corePath: absURL('ocr/core'), langPath: absURL('ocr/lang'),
+        gzip: true, workerBlobURL: false,
+        logger: function (m) {
+          if (m.status === 'recognizing text') onEstado('Leyendo la etiqueta… ' + Math.round(m.progress * 100) + '%', 20 + m.progress * 78);
+          else if (m.status && /load|initializ/.test(m.status)) onEstado('Preparando el lector…', 8 + Math.min(10, (m.progress || 0) * 10));
+        }
+      });
+    }).then(function (w) { worker = w; return worker.recognize(pf.canvas); });
+  }).then(function (r) {
+    var texto = (r.data.text || '').replace(/-\s*\n\s*/g, '').replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+    return { texto: texto, conf: r.data.confidence || 0, mini: miniUrl };
+  }).then(function (res) { if (worker) worker.terminate(); return res; },
+          function (err) { if (worker) { try { worker.terminate(); } catch (e) { } } throw err; });
+}
+
 function abrirEtiqueta() {
   abrirLector(
-    '<div class="articulo"><h1>Revisá una etiqueta</h1>' +
-    '<p class="intro">Copiá la lista de ingredientes del envase, pegala acá y te marco dónde está el gluten.</p>' +
-    '<div class="panel"><label class="et" for="eTxt">Ingredientes</label>' +
+    '<div class="articulo"><h1>Escaneá una etiqueta</h1>' +
+    '<p class="intro">Sacale una foto a la lista de ingredientes y te marco dónde está el gluten. También podés pegar el texto a mano.</p>' +
+    '<div class="panel foto-panel">' +
+    '<button class="btn maiz ancho" id="eFoto" type="button">' + svg('camara') + ' Sacar foto de la etiqueta</button>' +
+    '<button class="link-gal" id="eGal" type="button">O elegir una foto de la galería</button>' +
+    '<input id="eArch" type="file" accept="image/*" capture="environment" hidden>' +
+    '<input id="eArchG" type="file" accept="image/*" hidden>' +
+    '<ul class="consejos"><li>Apuntá a la <b>lista de ingredientes</b>: suele estar atrás o en el costado del envase.</li>' +
+    '<li>Buena luz, sin reflejos y bien de cerca, para que se lean las letras chicas.</li>' +
+    '<li>La foto se lee en tu celular y no se envía a ningún lado.</li></ul>' +
+    '<div id="eProg" hidden><div class="prog"><i id="eBarra"></i></div><p class="chico" id="eEstado" role="status" aria-live="polite"></p></div>' +
+    '<img id="eMini" class="mini-foto" alt="La foto que sacaste" hidden></div>' +
+    '<div class="panel"><label class="et" for="eTxt">O pegá o corregí los ingredientes</label>' +
     '<textarea id="eTxt" class="campo" rows="5" placeholder="Ej.: harina de trigo, azúcar, extracto de malta, sal. Puede contener trazas de soja."></textarea>' +
     '<button class="btn prim ancho" id="eVer">Revisar ingredientes</button>' +
-    '<button class="btn sec ancho" id="eEj" style="margin-top:.6rem">Probar con un ejemplo</button>' +
-    '<p class="chico" id="eRest" style="margin:.7rem 0 0"></p></div>' +
-    (esIOS ? '<div class="nota"><strong>Con el iPhone no hace falta escribir:</strong> tocá el campo de arriba y elegí "Escanear texto" para apuntar la cámara a la etiqueta. Funciona en iPhone XS o más nuevos.</div>' : '') +
+    '<button class="btn sec ancho" id="eEj" style="margin-top:.6rem">Probar con un ejemplo</button></div>' +
     '<div id="eRes" aria-live="polite"></div>' +
-    '<div class="nota"><strong>Importante:</strong> esta revisión busca palabras con gluten en lo que pegaste. No reemplaza el sello del envase ni la opinión de tu médico.</div></div>',
+    '<div class="nota"><strong>Importante:</strong> esta revisión busca palabras con gluten en el texto. Una foto puede leerse mal, y el producto puede contaminarse en la fábrica. No reemplaza el sello del envase ni la opinión de tu médico.</div></div>',
     function (cont) {
-      var txt = $('#eTxt', cont), res = $('#eRes', cont), rest = $('#eRest', cont);
-      function restantes() {
-        if (premium()) { rest.textContent = ''; return; }
-        var u = Math.max(0, USOS_GRATIS - LS.get('etqUsos', 0));
-        rest.textContent = u > 0 ? 'Te quedan ' + u + (u === 1 ? ' revisión gratis.' : ' revisiones gratis.') : 'Usaste tus ' + USOS_GRATIS + ' revisiones gratis. Con la app completa son sin límite.';
-      }
-      function correr(texto, cuenta) {
-        res.innerHTML = resultadoEtiquetaHTML(analizarEtiqueta(texto));
-        if (cuenta && !premium()) LS.set('etqUsos', LS.get('etqUsos', 0) + 1);
-        restantes();
+      var txt = $('#eTxt', cont), res = $('#eRes', cont), prog = $('#eProg', cont), barra = $('#eBarra', cont), estado = $('#eEstado', cont), mini = $('#eMini', cont), ocupado = false;
+      function correr(texto, op) {
+        var r = analizarEtiqueta(texto);
+        if (op && op.foto) {
+          var sos = palabrasSospechosas(texto).filter(function (x) { return !r.hall.some(function (h) { return aSinTilde(h.n).indexOf(x.parecido) >= 0; }); });
+          sos.forEach(function (x) { r.hall.push({ t: 'a', n: 'Leí «' + x.leido + '»: ¿será «' + x.parecido + '»?', d: 'La foto puede haberse leído mal. Mirá esa palabra en el envase.' }); });
+          if (sos.length) r.amarillo = true;
+        }
+        res.innerHTML = resultadoEtiquetaHTML(r, op);
         res.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      function procesar(file) {
+        if (!file || ocupado) return;
+        ocupado = true; res.innerHTML = ''; prog.hidden = false; barra.style.width = '4%'; estado.textContent = 'Preparando la foto…';
+        leerFoto(file, function (t, pct) { estado.textContent = t; barra.style.width = Math.max(4, Math.min(100, pct)) + '%'; })
+          .then(function (r) {
+            prog.hidden = true; mini.src = r.mini; mini.hidden = false; txt.value = r.texto;
+            var baja = r.texto.length < 30 || r.conf < 60;
+            correr(r.texto || ' ', { foto: true, baja: baja, conf: r.conf });
+          })
+          .catch(function () {
+            prog.hidden = true;
+            res.innerHTML = '<div class="alerta"><strong>No pude leer la foto.</strong> Probá de nuevo con buena luz y bien de cerca. Si no funciona, pegá o escribí los ingredientes en el cuadro de abajo.</div>';
+          })
+          .then(function () { ocupado = false; $('#eArch', cont).value = ''; $('#eArchG', cont).value = ''; });
+      }
+      $('#eFoto', cont).addEventListener('click', function () { $('#eArch', cont).click(); });
+      $('#eGal', cont).addEventListener('click', function () { $('#eArchG', cont).click(); });
+      $('#eArch', cont).addEventListener('change', function () { procesar(this.files && this.files[0]); });
+      $('#eArchG', cont).addEventListener('change', function () { procesar(this.files && this.files[0]); });
       $('#eVer', cont).addEventListener('click', function () {
         var t = txt.value.trim();
-        if (t.length < 3) { aviso('Pegá o escribí los ingredientes primero.'); txt.focus(); return; }
-        if (!premium() && LS.get('etqUsos', 0) >= USOS_GRATIS) { abrirActivar(); return; }
-        correr(t, true);
+        if (t.length < 3) { aviso('Sacá una foto o pegá los ingredientes primero.'); txt.focus(); return; }
+        correr(t, null);
       });
       $('#eEj', cont).addEventListener('click', function () {
         txt.value = 'Harina de trigo, azúcar, aceite de girasol, extracto de malta, sal. Puede contener trazas de soja y leche.';
-        correr(txt.value, false);
+        correr(txt.value, null);
       });
-      restantes();
     }
   );
 }
@@ -1229,12 +1355,7 @@ function abrirProximo(clave) {
     '<div class="cuenta"><span class="n">' + d + '</span><span>' + (d === 1 ? 'día' : 'días') + ' para que se abra<br>el ' + esc(fechaCorta(it.desde)) + '</span></div>' +
     '<p>' + esc(it.adelanto || it.resumen || '') + '</p>' +
     (it.incluye && it.incluye.length ? '<h3>Qué vas a encontrar</h3><ul>' + it.incluye.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
-    (premium() ? '<div class="nota">Es parte de tu app completa. Se abre solo ese día, sin que hagas nada, y la campanita te avisa.</div>'
-      : '<div class="nota">Se abre para quienes tienen la app completa, sin pagar de nuevo.</div><button class="btn prim ancho" id="pxAct">Activar mi app completa</button>'),
-    function (h) {
-      var b = $('#pxAct', h);
-      if (b) b.addEventListener('click', function () { volver(); setTimeout(abrirActivar, 120); });
-    }
+    '<div class="nota">Es parte de tu app. Se abre solo ese día, sin que hagas nada, y la campanita te avisa.</div>'
   );
 }
 
@@ -1675,13 +1796,13 @@ function abrirIA() {
 
 /* ================== CLICS ================== */
 var TOOLS = {
-  activar: abrirActivar, novedades: abrirNovedades, perfil: function () { abrirPerfil(false); },
+  novedades: abrirNovedades, perfil: function () { abrirPerfil(false); },
   letra: abrirLetraHoja, legal: abrirLegal,
   diario: abrirDiario, mozo: abrirMozo, cocina: abrirCocina, compras: abrirCompras, super: abrirCompras, etiqueta: abrirEtiqueta, intestino: abrirIntestino,
   ia: function () { if (!velo.hidden) { volver(); setTimeout(abrirIA, 150); } else abrirIA(); },
   cocino: abrirCocino, mensajes: abrirMensajes, lugar: abrirLugar, detective: abrirDetective, informe: abrirInforme,
   semaforo: function () { ir('inicio'); setTimeout(function () { var b = $('#busca'); if (b) { b.focus(); b.scrollIntoView({ block: 'center' }); } }, 50); },
-  instalar: function () { if (!eventoInstalar) return; eventoInstalar.prompt(); eventoInstalar.userChoice.then(function () { eventoInstalar = null; pintarVista(); }); },
+  instalar: abrirInstalar, tema: abrirTemaHoja,
   iosOk: function () { LS.set('iosOk', true); pintarVista(); }
 };
 document.addEventListener('click', function (e) {
@@ -1692,7 +1813,6 @@ document.addEventListener('click', function (e) {
   var t = e.target.closest('[data-tool]');
   if (t) {
     var tool = t.getAttribute('data-tool');
-    if (HERRAMIENTAS_PREMIUM[tool] && !premium()) { abrirActivar(); return; }
     if (TOOLS[tool]) {
       if (tool === 'semaforo') cerrarTodo();
       TOOLS[tool]();
@@ -1704,11 +1824,16 @@ document.addEventListener('click', function (e) {
 });
 
 /* ================== BIENVENIDA ================== */
+function instalarBienvenidaHTML() {
+  if (instalada) return '';
+  return '<div class="inst-bv"><p><b>Primero, instalá la app.</b> Así la abrís con un toque desde tu pantalla de inicio, como cualquier otra.</p>' +
+    '<button class="btn prim ancho" data-tool="instalar">Instalar la aplicación</button></div>';
+}
 function mostrarBienvenida() {
   var bv = $('#bienvenida');
   bv.innerHTML = '<div class="bienvenida-in"><img class="logo" src="icon-192.png" alt="">' +
     '<h1>Mi Mundo Sin Gluten</h1><p class="bajada">Tu guía para comer tranquila, entender la celiaquía y resolver las dudas del día a día.</p>' +
-    formPerfil({}) + '<button class="btn prim ancho" id="bEmpezar">Empezar</button></div>';
+    instalarBienvenidaHTML() + formPerfil({}) + '<button class="btn prim ancho" id="bEmpezar">Empezar</button></div>';
   bv.hidden = false;
   $('#bEmpezar', bv).addEventListener('click', function () {
     LS.set('perfil', { nombre: $('#pNombre', bv).value.trim(), pais: $('#pPais', bv).value });
@@ -1717,9 +1842,9 @@ function mostrarBienvenida() {
 }
 
 /* ================== ARRANQUE ================== */
+aplicarTema();
 ir('inicio');
 if (!perfil()) mostrarBienvenida();
-revisarAcceso();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
 }
